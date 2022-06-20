@@ -1,19 +1,20 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser')
-require('dotenv').config();
+const server = require('net').Server();
+const END = 'END';
 
-// middlewares
-app.use(bodyParser.urlencoded({ extended: false }))
+server.on('connection', socket => {
+  const user = `${socket.remoteAddress}:${socket.remotePort}`;
+  console.log(`New connection ${user}`);
 
-// routes
-app.route('/').get((req, res) => {
-  res.sendFile(process.cwd() + '/index.html');
+  socket.on('data', message => {
+    if (message == END) {
+      console.log(`${user} logout`);
+    } else {
+      console.log(`[${user}] -> ${message}`);
+    }
+  });
 });
 
-app.route('/register').post((req, res) => {
-  const { username, password } = req.body;
-  res.send('welcome ' + username);
-});
-
-app.listen(3000);
+server.listen(
+  { port: 3000, host: 'localhost' },
+  () => console.log('Listenning on port 3000')
+);
