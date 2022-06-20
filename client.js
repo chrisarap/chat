@@ -14,6 +14,9 @@ readline.on('line', message => {
   socket.write(message);
   if (message === END) {
     socket.end();
-    process.exit(0);
   }
+});
+
+socket.on('close', () => {
+  process.exit(0);
 });
