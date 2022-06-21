@@ -7,6 +7,12 @@ const error = message => {
   process.exit(1);
 }
 
+const connnections = new Map();
+
+const sendMessage = (message, origin) => {
+  // send message to all users
+}
+
 const listen = port => {
 
   server.on('connection', socket => {
@@ -15,7 +21,10 @@ const listen = port => {
     socket.setEncoding('utf8');
 
     socket.on('data', message => {
-      if (message === END) {
+      if(!connnections.has(socket)){
+        console.log(`Username ${message} set for connection ${user}`);
+        connnections.set(socket, message);
+      } else if (message === END) {
         socket.end();
       } else {
         console.log(`[${user}] -> ${message}`);
